@@ -24,9 +24,6 @@ Composer (optional for autoloading)
 Installation
 Clone the repository:
 
-bash
-Copy
-Edit
 git clone https://github.com/your-username/task-manager.git
 cd task-manager
 Set up the database:
@@ -35,9 +32,6 @@ Create a new MySQL database and configure it in config.php or the database setti
 
 Example:
 
-php
-Copy
-Edit
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', 'your-password');
@@ -46,9 +40,6 @@ Install dependencies (optional):
 
 If you're using Composer, run the following command to install necessary dependencies:
 
-bash
-Copy
-Edit
 composer install
 Configure the .htaccess file (for Apache):
 
@@ -56,9 +47,6 @@ If using Apache, make sure you have a .htaccess file in your root directory for 
 
 Example .htaccess:
 
-perl
-Copy
-Edit
 RewriteEngine On
 RewriteBase /task-manager/
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -71,9 +59,7 @@ Open your browser and navigate to http://localhost/task-manager/public/index.php
 Log in or register a new user, and start managing your tasks.
 
 File Structure
-bash
-Copy
-Edit
+
 /task-manager
 ├── /controllers         # Controllers for handling app logic
 │   ├── UserController.php
