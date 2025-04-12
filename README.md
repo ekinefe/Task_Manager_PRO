@@ -2,6 +2,16 @@
 
 A simple Task Manager application that allows users to manage tasks with different categories, priorities, statuses, and due dates. The app provides features for authentication, task management, task status updates, and generating reports.
 
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+
 ## Features
 
 - **User Authentication:** Register and login/logout functionality.
