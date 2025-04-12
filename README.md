@@ -101,10 +101,10 @@ RewriteRule ^ index.php [QSA,L]
 - From the task list, click on ```Edit``` next to any task to update its details.
 
 #### Changing Status:
-- Mark tasks as Todo, In Progress, or Done by clicking on the respective status link.
+- Mark tasks as ```Todo```, ```In Progress```, or ```Done``` by clicking on the respective status link.
 
 #### Deleting a Task:
-- Delete tasks from the task list by clicking on Delete. A confirmation will appear before the task is deleted.
+- Delete tasks from the task list by clicking on ```Delete```. A confirmation will appear before the task is deleted.
 
 ### User Authentication
 - **Register:** New users can create an account via the registration page.
@@ -112,22 +112,22 @@ RewriteRule ^ index.php [QSA,L]
 - **Logout:** Users can log out to end the session.
 
 ### Reports
-- View task performance reports by navigating to the 📈 View Task Report section.
+- View task performance reports by navigating to the ```📈 View Task Report``` section.
 
 ### Search
 - Use the search functionality to find tasks by title, category, or status.
 
 ### Troubleshooting
 - Ensure your database is properly configured and the required tables exist.
-- Make sure the PHP server is running, and the .htaccess file is set up for URL rewriting.
+- Make sure the PHP server is running, and the ```.htaccess``` file is set up for URL rewriting.
 
 ## Contributing
 Contributions are welcome! If you'd like to improve this project, feel free to open a pull request or create an issue.
 
 - 1. Fork the repository.
 - 2. Create a new branch (```bash git checkout -b feature-name ```).
-- 3. Commit your changes (git commit -am 'Add feature').
-- 4. Push to the branch (git push origin feature-name).
+- 3. Commit your changes (```git commit -am 'Add feature'```).
+- 4. Push to the branch (```git push origin feature-name```).
 - 5. Create a new pull request.
 
 ## License
