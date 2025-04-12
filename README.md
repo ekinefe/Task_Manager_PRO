@@ -63,8 +63,8 @@ RewriteRule ^ index.php [QSA,L]
 
 ### 5. Run the application:
 
-- **Open your browser and navigate to http://localhost/task-manager/public/index.php
-- **Log in or register a new user, and start managing your tasks.
+- Open your browser and navigate to http://localhost/task-manager/public/index.php
+- Log in or register a new user, and start managing your tasks.
 
 ## File Structure
 
@@ -94,14 +94,29 @@ RewriteRule ^ index.php [QSA,L]
 
 ### Task Management
 #### 1. ADding a task:
-- ** Navigate to the task list page and click on + Add Task.
-- ** Fill in the task details such as title, description, priority, and due date.
+- Navigate to the task list page and click on + Add Task.
+- Fill in the task details such as title, description, priority, and due date.
 
 #### Editing a Task:
-- ** From the task list, click on Edit next to any task to update its details.
+- From the task list, click on Edit next to any task to update its details.
 
 #### Changing Status:
-- ** Mark tasks as Todo, In Progress, or Done by clicking on the respective status link.
+- Mark tasks as Todo, In Progress, or Done by clicking on the respective status link.
 
 #### Deleting a Task:
-- ** Delete tasks from the task list by clicking on Delete. A confirmation will appear before the task is deleted.
+- Delete tasks from the task list by clicking on Delete. A confirmation will appear before the task is deleted.
+
+### User Authentication
+- **Register:** New users can create an account via the registration page.
+- **Login:** Log in using registered credentials.
+- **Logout:** Users can log out to end the session.
+
+### Reports
+- View task performance reports by navigating to the 📈 View Task Report section.
+
+### Search
+- Use the search functionality to find tasks by title, category, or status.
+
+### Troubleshooting
+- Ensure your database is properly configured and the required tables exist.
+- Make sure the PHP server is running, and the .htaccess file is set up for URL rewriting.
