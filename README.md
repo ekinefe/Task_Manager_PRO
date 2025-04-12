@@ -90,3 +90,18 @@ RewriteRule ^ index.php [QSA,L]
 └── /assets              # Static files (CSS, images)
 ```
 
+## Usage
+
+### Task Management
+#### 1. ADding a task:
+- ** Navigate to the task list page and click on + Add Task.
+- ** Fill in the task details such as title, description, priority, and due date.
+
+#### Editing a Task:
+- ** From the task list, click on Edit next to any task to update its details.
+
+#### Changing Status:
+- ** Mark tasks as Todo, In Progress, or Done by clicking on the respective status link.
+
+#### Deleting a Task:
+- ** Delete tasks from the task list by clicking on Delete. A confirmation will appear before the task is deleted.
