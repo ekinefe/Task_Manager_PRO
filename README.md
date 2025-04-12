@@ -120,3 +120,17 @@ RewriteRule ^ index.php [QSA,L]
 ### Troubleshooting
 - Ensure your database is properly configured and the required tables exist.
 - Make sure the PHP server is running, and the .htaccess file is set up for URL rewriting.
+
+## Contributing
+Contributions are welcome! If you'd like to improve this project, feel free to open a pull request or create an issue.
+
+- 1. Fork the repository.
+- 2. Create a new branch (```bash git checkout -b feature-name ```).
+- 3. Commit your changes (git commit -am 'Add feature').
+- 4. Push to the branch (git push origin feature-name).
+- 5. Create a new pull request.
+
+## License
+This project is open-source and available under the MIT License.
+
+
