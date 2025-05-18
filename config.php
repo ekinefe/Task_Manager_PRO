@@ -1,7 +1,23 @@
 <?php
-return new PDO(
-    'mysql:host=localhost;dbname=task_manager_pro;charset=utf8',
-    'root',
-    '',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+// config.php
+
+function getPDO() {
+    $host = 'localhost';
+    $db   = 'task_manager_pro'; // Make sure this DB exists in phpMyAdmin
+    $user = 'root';
+    $pass = ''; // empty password for XAMPP by default
+    $charset = 'utf8mb4';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Shows error if connection fails
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+
+    try {
+        return new PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+        throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    }
+}
