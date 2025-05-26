@@ -8,9 +8,9 @@ A simple Task Manager application that allows users to manage tasks with differe
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
-
 
 ## Features
 
@@ -18,52 +18,44 @@ A simple Task Manager application that allows users to manage tasks with differe
 - **Task Management:** Add, edit, delete, and update the status of tasks.
 - **Task Search:** Search tasks by title, category, or status.
 - **Reports:** View task reports for performance analysis.
-- **Category Management:** Add and list categories for task classification.
+- **Category Management:** Add, edit, and delete categories for task classification.
 
 ## Requirements
 
 - PHP 7.x or higher
-- MySQL or any compatible database
+- MySQL or compatible database
 - Web server (Apache or Nginx)
-- Composer (optional for autoloading)
+- Composer (optional)
 
 ## Installation
 
-### 1. Clone the repository:
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/your-username/task-manager.git
 cd task-manager
 ```
 
-### 2. Set up the datase:
+2. Set up the database:
 
-Create a new MySQL database and configure the database settings inside your project. You can find the database configuration settings in the config.php file or inside the controllers.
+Create a MySQL database and import `task_manager_pro.sql`. Configure credentials in `config.php`:
 
-Example database configuration in config.php:
-
-```bash 
+```php
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', 'your-password');
-define('DB_NAME', 'task_manager');
+define('DB_NAME', 'task_manager_pro');
 ```
 
-### 3. Install dependencies (optianlal):
-
-If you're using Composer, run the following command to install the necessary dependencies:
+3. Install dependencies (optional):
 
 ```bash
 composer install
 ```
 
-### 4. Configure .htaccess file (for Apache):
+4. Configure .htaccess (for Apache):
 
-If using Apache, ensure you have a .htaccess file for URL rewriting.
-
-Example .htaccess file:
-
-```bash
+```
 RewriteEngine On
 RewriteBase /task-manager/
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -71,76 +63,73 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
 ```
 
-### 5. Run the application:
+5. Run the app:
 
-- Open your browser and navigate to http://localhost/task-manager/public/index.php
-- Log in or register a new user, and start managing your tasks.
+Go to `http://localhost/task-manager/public/index.php`
 
 ## File Structure
 
-```bash
-/task-manager
-├── /controllers         # Controllers for handling app logic
+```
+task-manager/
+├── controllers/
 │   ├── UserController.php
 │   ├── TaskController.php
 │   └── CategoryController.php
-├── /models              # Models for database interaction
+├── models/
 │   ├── User.php
 │   ├── Task.php
 │   └── Category.php
-├── /views               # HTML templates
+├── views/
 │   ├── task_list.php
 │   ├── login.php
 │   ├── register.php
 │   └── error.php
-├── /public              # Public assets
-│   └── index.php        # Main entry point
-├── /config              # Configuration files
-│   └── config.php
-└── /assets              # Static files (CSS, images)
+├── public/
+│   └── index.php
+├── config.php
+└── assets/
 ```
 
 ## Usage
 
 ### Task Management
-#### 1. ADding a task:
-- Navigate to the task list page and click on ```+ Add Task```.
-- Fill in the task details such as title, description, priority, and due date.
 
-#### Editing a Task:
-- From the task list, click on ```Edit``` next to any task to update its details.
+- **Add a task:** Use "+ Add Task" to enter title, description, priority, and due date.
+- **Edit a task:** Click "Edit" to update task details.
+- **Change status:** Mark as Todo, In Progress, or Done.
+- **Delete a task:** Use "Delete" with confirmation.
 
-#### Changing Status:
-- Mark tasks as ```Todo```, ```In Progress```, or ```Done``` by clicking on the respective status link.
+### Authentication
 
-#### Deleting a Task:
-- Delete tasks from the task list by clicking on ```Delete```. A confirmation will appear before the task is deleted.
-
-### User Authentication
-- **Register:** New users can create an account via the registration page.
-- **Login:** Log in using registered credentials.
-- **Logout:** Users can log out to end the session.
+- **Register:** Create an account.
+- **Login:** Sign in.
+- **Logout:** Ends the session.
 
 ### Reports
-- View task performance reports by navigating to the ```📈 View Task Report``` section.
+
+- View status breakdown and overdue task counts.
 
 ### Search
-- Use the search functionality to find tasks by title, category, or status.
 
-### Troubleshooting
-- Ensure your database is properly configured and the required tables exist.
-- Make sure the PHP server is running, and the ```.htaccess``` file is set up for URL rewriting.
+- Filter tasks by keyword, category, priority, or status.
+
+## Troubleshooting
+
+- Check database connection and tables.
+- Ensure `.htaccess` works for URL rewriting.
 
 ## Contributing
-Contributions are welcome! If you'd like to improve this project, feel free to open a pull request or create an issue.
 
-- 1. Fork the repository.
-- 2. Create a new branch (```bash git checkout -b feature-name ```).
-- 3. Commit your changes (```git commit -am 'Add feature'```).
-- 4. Push to the branch (```git push origin feature-name```).
-- 5. Create a new pull request.
+Contributions are welcome!
+
+```bash
+git checkout -b feature-name
+git commit -am "Add feature"
+git push origin feature-name
+```
+
+Then open a pull request.
 
 ## License
-This project is open-source and available under the MIT License.
 
-
+This project is licensed under the MIT License.
