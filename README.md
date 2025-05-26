@@ -80,10 +80,18 @@ task-manager/
 │   ├── Task.php
 │   └── Category.php
 ├── views/
-│   ├── task_list.php
+│   ├── add_category.php
+│   ├── add_task.php
+│   ├── catagory_list.php
+│   ├── edit_catagory.php
+│   ├── edit_task.php
+│   ├── error.php
 │   ├── login.php
+│   ├── nav.php
 │   ├── register.php
-│   └── error.php
+│   ├── report.php
+│   ├── search_tasks.php
+│   └── task_list.php
 ├── public/
 │   └── index.php
 ├── config.php
