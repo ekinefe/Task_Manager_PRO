@@ -1,30 +1,35 @@
-<h2>Add Task</h2>
-<form method="POST">
-    <label>Title: <input type="text" name="title" required></label><br>
-    <label>Description: <textarea name="description"></textarea></label><br>
-    <label>Category:
-        <select name="category_id">
-            <option value="">None</option>
-            <?php foreach ($categories as $category): ?>
-                <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </label><br>
-    <label>Priority:
-        <select name="priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-        </select>
-    </label><br>
-    <label>Due Date (optional): <input type="datetime-local" name="due_date"></label><br>
-    <button type="submit">Add Task</button>
+<!-- views/add_task.php -->
+<?php include __DIR__ . '/nav.php'; ?>
+
+<h2>➕ Add Task</h2>
+<form method="POST" style="max-width:500px;">
+    <label>Title:</label><br>
+    <input name="title" required><br><br>
+
+    <label>Description:</label><br>
+    <textarea name="description" rows="3"></textarea><br><br>
+
+    <label>Category:</label><br>
+    <select name="category_id">
+        <option value="">-- None --</option>
+        <?php foreach ($categories as $cat): ?>
+            <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
+
+    <label>Priority:</label><br>
+    <select name="priority">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+    </select><br><br>
+
+    <label>Due Date:</label><br>
+    <input name="due_date" type="datetime-local"><br><br>
+
+    <button type="submit">Create Task</button>
 </form>
 
-<?php if (!empty($errors)): ?>
-    <ul style="color: red;">
-        <?php foreach ($errors as $error): ?>
-            <li><?= htmlspecialchars($error) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+<?= isset($error) ? "<p style='color:red'>$error</p>" : '' ?>
+
+<?php include __DIR__ . '/nav.php'; ?>

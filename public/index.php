@@ -1,78 +1,42 @@
+<!-- public/index.php -->
 <?php
-// ../public/index.php
-
-require_once '../models/User.php';
-require_once '../models/Category.php';
-require_once '../models/Task.php';
-require_once '../controllers/UserController.php';
-require_once '../controllers/CategoryController.php';
-require_once '../controllers/TaskController.php';
-
 session_start();
+
+require_once __DIR__ . '/../controllers/UserController.php';
+require_once __DIR__ . '/../controllers/CategoryController.php';
+require_once __DIR__ . '/../controllers/TaskController.php';
 
 $action = $_GET['action'] ?? 'login';
 
 switch ($action) {
-    case 'home':
-        if (isset($_SESSION['user_id'])) {
-            header("Location: index.php?action=task_list");
-            exit;
-        } else {
-            header("Location: index.php?action=login");
-            exit;
-        }
-        break;
-
     case 'register':
-        (new UserController())->register();
-        break;
-
+        UserController::register(); break;
     case 'login':
-        (new UserController())->login();
-        break;
-
+        UserController::login(); break;
     case 'logout':
-        (new UserController())->logout();
-        break;
-
+        UserController::logout(); break;
     case 'category_list':
-        (new CategoryController())->list();
-        break;
-
+        CategoryController::list(); break;
     case 'add_category':
-        (new CategoryController())->add();
-        break;
-
-    case 'task_list':
-        (new TaskController())->list();
-        break;
-
+        CategoryController::add(); break;
+    case 'tasks':
+        TaskController::list(); break;
     case 'add_task':
-        (new TaskController())->add();
-        break;
-
-    case 'edit':
-        (new TaskController())->edit();
-        break;
-
-    case 'delete':
-        (new TaskController())->delete();
-        break;
-
+        TaskController::add(); break;
+    case 'edit_task':
+        TaskController::edit(); break;
     case 'setStatus':
-        (new TaskController())->setStatus();
-        break;
-
+        TaskController::setStatus(); break;
+    case 'delete':
+        TaskController::delete(); break;
     case 'search':
-        (new TaskController())->search();
-        break;
-
+        TaskController::search(); break;
     case 'report':
-        (new TaskController())->report();
-        break;
-
+        TaskController::report(); break;
+    case 'edit_category':
+        CategoryController::edit(); break;
+    case 'delete_category':
+        CategoryController::delete(); break;
     default:
-        $message = "The page you are looking for doesn't exist.";
-        require_once '../views/error.php';
-        break;
+        include __DIR__ . '/../views/error.php';
 }

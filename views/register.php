@@ -1,9 +1,18 @@
-<h2>Register</h2>
-<?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
-<form method="POST">
-    Username: <input type="text" name="username"><br>
-    Email: <input type="email" name="email"><br>
-    Password: <input type="password" name="password"><br>
+<!-- views/register.php -->
+<?php include __DIR__ . '/nav.php'; ?>
+
+<h2>🧾 Register</h2>
+<form method="POST" style="max-width:400px;">
+    <label>Username:</label><br>
+    <input name="username" required><br><br>
+
+    <label>Email:</label><br>
+    <input name="email" type="email" required><br><br>
+
+    <label>Password:</label><br>
+    <input name="password" type="password" required><br><br>
+
     <button type="submit">Register</button>
 </form>
-<a href="index.php?action=login">Login</a>
+
+<?= isset($error) ? "<p style='color:red'>$error</p>" : '' ?>

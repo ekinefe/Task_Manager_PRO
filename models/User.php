@@ -1,40 +1,37 @@
+<!-- models/User.php -->
 <?php
-//require_once 'BaseModel.php'; // Optional: For shared DB logic
 require_once __DIR__ . '/../config.php';
 
 class User {
-    private $pdo;
+    public static function register($username, $email, $password) {
+        $pdo = getPDO();
 
-    public function __construct() {
-        $this->pdo = getPDO();
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username OR email = :email");
+        $stmt->execute(['username' => $username, 'email' => $email]);
+        if ($stmt->fetchColumn() > 0) return "Username or email already taken.";
+
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $stmt->execute([$username, $email, $hashed]);
+        return true;
     }
 
-    public function register($username, $email, $password) {
-        // Check uniqueness
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
-        if ($stmt->fetch()) return "Username or email already exists.";
-
-        // Hash password and insert
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        return $stmt->execute([$username, $email, $hash]);
-    }
-
-    public function login($username, $password) {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = ?");
+    public static function login($username, $password) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            return true;
+            return $user['id'];
         }
         return false;
     }
 
-    public function getById($id) {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = ?");
+    public static function getById($id) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 }
+?>

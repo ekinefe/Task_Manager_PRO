@@ -1,147 +1,167 @@
+<!-- models/TAsk.php -->
 <?php
 require_once __DIR__ . '/../config.php';
 
-class Task
-{
-    public static function add($userId, $title, $description, $categoryId, $priority, $dueDate) {
+class Task {
+    public static function add($userId, $data) {
         $pdo = getPDO();
-        $stmt = $pdo->prepare('INSERT INTO tasks (user_id, category_id, title, description, priority, due_date, status)
-                               VALUES (?, ?, ?, ?, ?, ?, "todo")');
+        $stmt = $pdo->prepare("INSERT INTO tasks 
+            (user_id, category_id, title, description, priority, due_date, status)
+            VALUES (:user_id, :category_id, :title, :description, :priority, :due_date, 'todo')");
+
         $stmt->execute([
-            $userId,
-            $categoryId ?: null,
-            $title,
-            $description ?: null,
-            $priority,
-            $dueDate ?: null
+            'user_id' => $userId,
+            'category_id' => $data['category_id'] ?: null,
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'priority' => $data['priority'],
+            'due_date' => $data['due_date'] ?: null
         ]);
     }
 
-    public static function getByUser($userId, $sortField = 'due_date', $sortOrder = 'asc') {
-        $allowedFields = ['title', 'priority', 'due_date', 'status'];
-        $allowedOrder = ['asc', 'desc'];
-    
-        // Sanitize input
-        if (!in_array($sortField, $allowedFields)) {
-            $sortField = 'due_date';
-        }
-    
-        if (!in_array($sortOrder, $allowedOrder)) {
-            $sortOrder = 'asc';
-        }
-    
-        $db = Database::getInstance();
-        $stmt = $db->prepare("
-            SELECT tasks.*, categories.name AS category_name 
-            FROM tasks 
-            LEFT JOIN categories ON tasks.category_id = categories.id 
-            WHERE tasks.user_id = ? 
-            ORDER BY $sortField $sortOrder
+    public static function getAll($userId) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("
+            SELECT tasks.*, categories.name AS category_name
+            FROM tasks
+            LEFT JOIN categories ON tasks.category_id = categories.id
+            WHERE tasks.user_id = ?
+            ORDER BY tasks.created_at DESC
         ");
         $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
-    
-
-
     public static function getById($id, $userId) {
-        $pdo = getPDO();
-        $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = ? AND user_id = ?");
-        $stmt->execute([$id, $userId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    $pdo = getPDO();
+    $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = ? AND user_id = ?");
+    $stmt->execute([$id, $userId]);
+    return $stmt->fetch();
     }
 
     public static function update($id, $userId, $data) {
         $pdo = getPDO();
-        $stmt = $pdo->prepare("UPDATE tasks SET title = ?, description = ?, category_id = ?, priority = ?, due_date = ?, status = ? WHERE id = ? AND user_id = ?");
-        return $stmt->execute([
-            $data['title'],
-            $data['description'],
-            $data['category_id'] ?: null,
-            $data['priority'],
-            $data['due_date'] ?: null,
-            $data['status'],
-            $id,
-            $userId
+        $stmt = $pdo->prepare("
+            UPDATE tasks SET 
+                title = :title,
+                description = :description,
+                category_id = :category_id,
+                priority = :priority,
+                due_date = :due_date,
+                status = :status
+            WHERE id = :id AND user_id = :user_id
+        ");
+        $stmt->execute([
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'category_id' => $data['category_id'] ?: null,
+            'priority' => $data['priority'],
+            'due_date' => $data['due_date'] ?: null,
+            'status' => $data['status'],
+            'id' => $id,
+            'user_id' => $userId
         ]);
     }
-    
+
     public static function setStatus($id, $userId, $status) {
         $pdo = getPDO();
-        if ($status === 'done') {
-            $stmt = $pdo->prepare("UPDATE tasks SET status = ?, completed_at = NOW() WHERE id = ? AND user_id = ?");
-        } else {
-            $stmt = $pdo->prepare("UPDATE tasks SET status = ?, completed_at = NULL WHERE id = ? AND user_id = ?");
-        }
-        return $stmt->execute([$status, $id, $userId]);
-    }
-    
-    public static function search($user_id, $term, $filters = []) {
-        $db = Database::getInstance();
-        $sql = "SELECT tasks.*, categories.name AS category_name
-                FROM tasks
-                LEFT JOIN categories ON tasks.category_id = categories.id
-                WHERE tasks.user_id = :user_id AND (tasks.title LIKE :term OR tasks.description LIKE :term)";
-        
-        $params = [
-            ':user_id' => $user_id,
-            ':term' => '%' . $term . '%',
-        ];
-    
-        if (!empty($filters['category_id'])) {
-            $sql .= " AND tasks.category_id = :category_id";
-            $params[':category_id'] = $filters['category_id'];
-        }
-        if (!empty($filters['priority'])) {
-            $sql .= " AND tasks.priority = :priority";
-            $params[':priority'] = $filters['priority'];
-        }
-        if (!empty($filters['status'])) {
-            $sql .= " AND tasks.status = :status";
-            $params[':status'] = $filters['status'];
-        }
-    
-        $stmt = $db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public static function getTaskCountByStatus($user_id) {
-        $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT status, COUNT(*) as count FROM tasks WHERE user_id = :user_id GROUP BY status");
-        $stmt->execute([':user_id' => $user_id]);
-        return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-    }
-    public static function getOverdueTaskCount($user_id) {
-        $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT COUNT(*) FROM tasks WHERE user_id = :user_id AND status != 'done' AND due_date < CURDATE()");
-        $stmt->execute([':user_id' => $user_id]);
-        return $stmt->fetchColumn();
-    }
-    public static function getCategorySummary($user_id) {
-        $db = Database::getInstance();
-        $stmt = $db->prepare("
-            SELECT c.name, 
-                   COUNT(t.id) AS total, 
-                   SUM(CASE WHEN t.status = 'done' THEN 1 ELSE 0 END) AS done
-            FROM categories c
-            LEFT JOIN tasks t ON c.id = t.category_id AND t.user_id = :user_id
-            WHERE c.user_id = :user_id
-            GROUP BY c.name
+        $completedAt = $status === 'done' ? date('Y-m-d H:i:s') : null;
+        $stmt = $pdo->prepare("
+            UPDATE tasks 
+            SET status = :status, completed_at = :completed_at 
+            WHERE id = :id AND user_id = :user_id
         ");
-        $stmt->execute([':user_id' => $user_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([
+            'status' => $status,
+            'completed_at' => $completedAt,
+            'id' => $id,
+            'user_id' => $userId
+        ]);
     }
-    public function delete($id, $userId) {
-        $stmt = $this->db->prepare("DELETE FROM tasks WHERE id = :id AND user_id = :userId");
-        return $stmt->execute(['id' => $id, 'userId' => $userId]);
+
+public static function search($userId, $filters) {
+    $pdo = getPDO();
+    $sql = "
+        SELECT tasks.*, categories.name AS category_name 
+        FROM tasks 
+        LEFT JOIN categories ON tasks.category_id = categories.id 
+        WHERE tasks.user_id = :user_id
+    ";
+
+    $params = ['user_id' => $userId];
+
+    if (!empty($filters['term'])) {
+        $sql .= " AND (tasks.title LIKE :term1 OR tasks.description LIKE :term2)";
+        $params['term1'] = '%' . $filters['term'] . '%';
+        $params['term2'] = '%' . $filters['term'] . '%';
     }
-    public function getTasks($userId, $sort = 'due_date') {
-        $allowed = ['priority', 'due_date', 'status'];
-        $sortColumn = in_array($sort, $allowed) ? $sort : 'due_date';
-    
-        $stmt = $this->db->prepare("SELECT * FROM tasks WHERE user_id = :userId ORDER BY $sortColumn ASC");
-        $stmt->execute(['userId' => $userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($filters['category_id'])) {
+        $sql .= " AND tasks.category_id = :category_id";
+        $params['category_id'] = $filters['category_id'];
     }
-    
+    if (!empty($filters['priority'])) {
+        $sql .= " AND tasks.priority = :priority";
+        $params['priority'] = $filters['priority'];
+    }
+    if (!empty($filters['status'])) {
+        $sql .= " AND tasks.status = :status";
+        $params['status'] = $filters['status'];
+    }
+
+    $sql .= " ORDER BY tasks.created_at DESC";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll();
 }
+
+
+
+public static function countByStatus($userId) {
+    $pdo = getPDO();
+    $stmt = $pdo->prepare("
+        SELECT status, COUNT(*) as count 
+        FROM tasks 
+        WHERE user_id = ? 
+        GROUP BY status
+    ");
+    $stmt->execute([$userId]);
+    $data = [];
+    foreach ($stmt->fetchAll() as $row) {
+        $data[$row['status']] = $row['count'];
+    }
+    return $data;
+}
+
+public static function countOverdue($userId) {
+    $pdo = getPDO();
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM tasks 
+        WHERE user_id = ? AND due_date IS NOT NULL AND due_date < NOW() AND status != 'done'
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchColumn();
+}
+
+public static function categorySummary($userId) {
+    $pdo = getPDO();
+    $stmt = $pdo->prepare("
+        SELECT c.name, COUNT(t.id) as total, 
+               SUM(CASE WHEN t.status = 'done' THEN 1 ELSE 0 END) as completed
+        FROM categories c
+        LEFT JOIN tasks t ON c.id = t.category_id
+        WHERE c.user_id = ?
+        GROUP BY c.id
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll();
+}
+public static function delete($id, $userId) {
+    $pdo = getPDO();
+    $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = ? AND user_id = ?");
+    $stmt->execute([$id, $userId]);
+}
+
+
+}
+?>

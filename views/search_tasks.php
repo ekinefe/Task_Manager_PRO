@@ -1,60 +1,55 @@
-<h2>Search Tasks</h2>
-<form method="get" action="index.php">
-    <input type="hidden" name="action" value="search">
-    <label>Search:</label>
-    <input type="text" name="term" value="<?= htmlspecialchars($_GET['term'] ?? '') ?>" required>
-    
-    <label>Category:</label>
+<!-- views/search_tasks.php -->
+ <?php include __DIR__ . '/nav.php'; ?>
+
+<h2>🔍 Search Tasks</h2>
+<form method="POST" style="max-width:500px;">
+    <label>Search Term:</label><br>
+    <input name="term" value="<?= htmlspecialchars($_POST['term'] ?? '') ?>"><br><br>
+
+    <label>Category:</label><br>
     <select name="category_id">
-        <option value="">-- All --</option>
+        <option value="">-- Any --</option>
         <?php foreach ($categories as $cat): ?>
-            <option value="<?= $cat['id'] ?>" <?= ($_GET['category_id'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
+            <option value="<?= $cat['id'] ?>" <?= ($_POST['category_id'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
                 <?= htmlspecialchars($cat['name']) ?>
             </option>
         <?php endforeach; ?>
-    </select>
+    </select><br><br>
 
-    <label>Priority:</label>
+    <label>Priority:</label><br>
     <select name="priority">
-        <option value="">-- All --</option>
-        <option value="low" <?= ($_GET['priority'] ?? '') == 'low' ? 'selected' : '' ?>>Low</option>
-        <option value="medium" <?= ($_GET['priority'] ?? '') == 'medium' ? 'selected' : '' ?>>Medium</option>
-        <option value="high" <?= ($_GET['priority'] ?? '') == 'high' ? 'selected' : '' ?>>High</option>
-    </select>
+        <option value="">-- Any --</option>
+        <?php foreach (['low', 'medium', 'high'] as $p): ?>
+            <option value="<?= $p ?>" <?= ($_POST['priority'] ?? '') == $p ? 'selected' : '' ?>><?= ucfirst($p) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
 
-    <label>Status:</label>
+    <label>Status:</label><br>
     <select name="status">
-        <option value="">-- All --</option>
-        <option value="todo" <?= ($_GET['status'] ?? '') == 'todo' ? 'selected' : '' ?>>To Do</option>
-        <option value="in_progress" <?= ($_GET['status'] ?? '') == 'in_progress' ? 'selected' : '' ?>>In Progress</option>
-        <option value="done" <?= ($_GET['status'] ?? '') == 'done' ? 'selected' : '' ?>>Done</option>
-    </select>
+        <option value="">-- Any --</option>
+        <?php foreach (['todo', 'in_progress', 'done'] as $s): ?>
+            <option value="<?= $s ?>" <?= ($_POST['status'] ?? '') == $s ? 'selected' : '' ?>><?= ucfirst(str_replace('_', ' ', $s)) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
 
     <button type="submit">Search</button>
 </form>
 
 <?php if (!empty($results)): ?>
-    <h3>Search Results</h3>
-    <table border="1" style="width:100%; margin-top:15px;">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($results as $task): ?>
-            <tr>
-                <td><?= htmlspecialchars($task['title']) ?></td>
-                <td><?= $task['category_name'] ?? '-' ?></td>
-                <td><?= ucfirst($task['priority']) ?></td>
-                <td><?= ucfirst($task['status']) ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php elseif (!empty($_GET['term'])): ?>
-    <p>No results found.</p>
+    <h3>Results</h3>
+    <ul>
+    <?php foreach ($results as $task): ?>
+        <li>
+            <strong><?= htmlspecialchars($task['title']) ?></strong><br>
+            <?= $task['description'] ? htmlspecialchars($task['description']) . "<br>" : '' ?>
+            Category: <?= htmlspecialchars($task['category_name'] ?? 'None') ?><br>
+            Priority: <?= htmlspecialchars($task['priority']) ?><br>
+            Status: <?= htmlspecialchars($task['status']) ?><br>
+            Due: <?= $task['due_date'] ?: 'N/A' ?><br>
+            <hr>
+        </li>
+    <?php endforeach; ?>
+    </ul>
 <?php endif; ?>
+
+<?php include __DIR__ . '/nav.php'; ?>

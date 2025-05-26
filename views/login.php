@@ -1,8 +1,15 @@
-<h2>Login</h2>
-<?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
-<form method="POST">
-    Username: <input type="text" name="username"><br>
-    Password: <input type="password" name="password"><br>
+<!-- views/login.php -->
+<h2>🔐 Login</h2>
+<form method="POST" style="max-width:400px;">
+    <label>Username:</label><br>
+    <input name="username" required><br><br>
+
+    <label>Password:</label><br>
+    <input name="password" type="password" required><br><br>
+
     <button type="submit">Login</button>
 </form>
-<a href="index.php?action=register">Register</a>
+
+<?= isset($error) ? "<p style='color:red'>$error</p>" : '' ?>
+
+<p>Don't have an account? <a href="?action=register">Register here</a></p>

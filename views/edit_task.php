@@ -1,37 +1,44 @@
-<h2>Edit Task</h2>
+<!-- views/edit_task.php -->
+<?php include __DIR__ . '/nav.php'; ?>
 
-<?php if (!empty($errors)): ?>
-    <ul>
-        <?php foreach ($errors as $e): ?>
-            <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+<h2>✏️ Edit Task</h2>
+<form method="POST" style="max-width:500px;">
+    <label>Title:</label><br>
+    <input name="title" value="<?= htmlspecialchars($task['title']) ?>" required><br><br>
 
-<form method="post">
-    Title: <input type="text" name="title" value="<?= htmlspecialchars($task['title']) ?>"><br>
-    Description: <textarea name="description"><?= htmlspecialchars($task['description']) ?></textarea><br>
-    Category:
+    <label>Description:</label><br>
+    <textarea name="description" rows="3"><?= htmlspecialchars($task['description']) ?></textarea><br><br>
+
+    <label>Category:</label><br>
     <select name="category_id">
-        <option value="">None</option>
-        <?php foreach ($categories as $c): ?>
-            <option value="<?= $c['id'] ?>" <?= $task['category_id'] == $c['id'] ? 'selected' : '' ?>>
-                <?= htmlspecialchars($c['name']) ?>
+        <option value="">-- None --</option>
+        <?php foreach ($categories as $cat): ?>
+            <option value="<?= $cat['id'] ?>" <?= $task['category_id'] == $cat['id'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($cat['name']) ?>
             </option>
         <?php endforeach; ?>
-    </select><br>
-    Priority:
+    </select><br><br>
+
+    <label>Priority:</label><br>
     <select name="priority">
         <?php foreach (['low', 'medium', 'high'] as $p): ?>
             <option value="<?= $p ?>" <?= $task['priority'] == $p ? 'selected' : '' ?>><?= ucfirst($p) ?></option>
         <?php endforeach; ?>
-    </select><br>
-    Due Date: <input type="datetime-local" name="due_date" value="<?= $task['due_date'] ? date('Y-m-d\TH:i', strtotime($task['due_date'])) : '' ?>"><br>
-    Status:
+    </select><br><br>
+
+    <label>Due Date:</label><br>
+    <input type="datetime-local" name="due_date" value="<?= $task['due_date'] ? date('Y-m-d\TH:i', strtotime($task['due_date'])) : '' ?>"><br><br>
+
+    <label>Status:</label><br>
     <select name="status">
         <?php foreach (['todo', 'in_progress', 'done'] as $s): ?>
             <option value="<?= $s ?>" <?= $task['status'] == $s ? 'selected' : '' ?>><?= ucfirst(str_replace('_', ' ', $s)) ?></option>
         <?php endforeach; ?>
-    </select><br>
-    <button type="submit">Update Task</button>
+    </select><br><br>
+
+    <button type="submit">Save Changes</button>
 </form>
+
+<?= isset($error) ? "<p style='color:red'>$error</p>" : '' ?>
+
+<?php include __DIR__ . '/nav.php'; ?>
