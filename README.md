@@ -93,6 +93,7 @@ task-manager/
 │   ├── search_tasks.php
 │   └── task_list.php
 ├── public/
+│   ├── install_data.php
 │   └── index.php
 ├── config.php
 └── assets/
